@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unità 1 — Magnetismo essenziale e induzione elettromagnetica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<style>
+:root {
+  --ink: #e8e4f0;
+  --paper: #0f0e1a;
+  --paper-dark: #1c1a2e;
+  --gold: #7c5cfc;
+  --gold-light: #a78bfa;
+  --back: #1e1b4b;
+  --back-dark: #0f0e2e;
+  --red: #8b2020;
+  --blue: #1a3a5c;
+  --green: #1a4a2e;
+  --shadow: rgba(26,16,8,0.18);
+  --card-w: min(560px, 94vw);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--paper); color: var(--ink); font-family: 'Source Serif 4', Georgia, serif; min-height: 100vh; }
+header { text-align: center; padding: 2rem 1rem 1.4rem; border-bottom: 2px solid var(--gold); position: relative; }
+.back-link { position: absolute; left: 1rem; top: 1rem; color: var(--gold); text-decoration: none; font-size: .85rem; font-weight: 600; }
+.back-link:hover { text-decoration: underline; }
+header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 4vw, 2.4rem); margin-top: .8rem; }
+header p { margin-top: .4rem; font-style: italic; opacity: .75; }
+
+.controls { position: sticky; top: 0; z-index: 10; background: var(--paper); border-bottom: 1px solid rgba(0,0,0,.08);
+  display: flex; flex-wrap: wrap; gap: .5rem; justify-content: center; align-items: center; padding: .7rem .8rem; }
+.group { display: flex; gap: .3rem; flex-wrap: wrap; }
+.btn { padding: .42rem .9rem; border-radius: 20px; border: 1.5px solid var(--gold); background: transparent; color: var(--ink);
+  font-family: inherit; font-size: .85rem; cursor: pointer; transition: all .15s; }
+.btn:hover { background: var(--gold-light); color: #fff; }
+.btn.active { background: var(--gold); color: #fff; }
+.btn[data-cat="esercizio"] { border-color: var(--red); } .btn[data-cat="esercizio"].active { background: var(--red); }
+.btn[data-cat="ragionamento"] { border-color: var(--green); } .btn[data-cat="ragionamento"].active { background: var(--green); }
+.pill { padding: .3rem .8rem; border-radius: 20px; background: var(--paper-dark); font-size: .8rem; font-weight: 600; }
+.sep { width: 1px; height: 26px; background: rgba(0,0,0,.15); }
+
+main { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+#quiz { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.progress { width: var(--card-w); height: 6px; background: var(--paper-dark); border-radius: 3px; overflow: hidden; }
+.progress-bar { height: 100%; width: 0; background: var(--gold); transition: width .3s; }
+.counter { font-size: .9rem; opacity: .75; }
+.scene { width: var(--card-w); min-height: 340px; perspective: 1400px; cursor: pointer; }
+.flip { position: relative; width: 100%; min-height: 340px; transition: transform .6s; transform-style: preserve-3d; }
+.flip.flipped { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; min-height: 340px; border-radius: 16px; padding: 2rem 1.8rem; box-shadow: 0 6px 24px var(--shadow);
+  backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; overflow-y: auto; }
+.front { background: #fff; color: #1a1008; border: 3px solid var(--gold); }
+.front.esercizio { border-color: var(--red); } .front.ragionamento { border-color: var(--green); }
+.back { background: linear-gradient(145deg, var(--back), var(--back-dark)); color: #f5f0e8; transform: rotateY(180deg); }
+.tag { font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: .8rem; color: var(--gold); }
+.front.esercizio .tag, .bcard.esercizio .tag { color: var(--red); } .front.ragionamento .tag, .bcard.ragionamento .tag { color: var(--green); }
+.back .tag { color: var(--gold-light); }
+.q { font-size: 1.2rem; line-height: 1.5; font-weight: 600; }
+.a { font-size: 1rem; line-height: 1.6; }
+.hint { position: absolute; bottom: .7rem; right: 1rem; font-size: .72rem; opacity: .5; font-style: italic; }
+.nav { display: flex; gap: .6rem; }
+.finish { display: none; text-align: center; background: #fff; color: #1a1008; border-radius: 16px; padding: 2rem; box-shadow: 0 6px 24px var(--shadow); width: var(--card-w); }
+.finish h2 { font-family: 'Playfair Display', serif; margin-bottom: .6rem; }
+
+#browse { display: none; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1rem; }
+.bcard { background: #fff; color: #1a1008; border-radius: 10px; padding: 1.1rem 1.2rem; box-shadow: 0 2px 10px var(--shadow); border-left: 5px solid var(--gold); }
+.bcard.esercizio { border-left-color: var(--red); } .bcard.ragionamento { border-left-color: var(--green); }
+.bcard .q { font-size: 1rem; margin-bottom: .6rem; }
+.bcard .a { font-size: .92rem; border-top: 1px dashed rgba(0,0,0,.15); padding-top: .6rem; }
+footer { text-align: center; padding: 1.2rem; font-size: .78rem; opacity: .6; font-style: italic; }
+@media (max-width: 580px) { .sep { display: none; } .back-link { position: static; display: inline-block; } }
+</style>
+</head>
+<body>
+<header>
+  <a class="back-link" href="index.html">← Tutte le unità</a>
+  <h1>Magnetismo essenziale e induzione elettromagnetica</h1>
+  <p id="subtitle">Unità 1 — Fisica · <span id="totCount"></span> Flashcards</p>
+</header>
+
+<div class="controls">
+  <div class="group" id="filters">
+    <button class="btn active" data-cat="tutte">Tutte</button>
+    <button class="btn" data-cat="teoria">Teoria</button>
+    <button class="btn" data-cat="esercizio">Esercizi</button>
+    <button class="btn" data-cat="ragionamento">Ragionamento</button>
+  </div>
+  <div class="sep"></div>
+  <div class="group" id="modes">
+    <button class="btn active" data-mode="quiz">Quiz</button>
+    <button class="btn" data-mode="browse">Consultazione</button>
+  </div>
+  <span class="pill" id="countPill"></span>
+</div>
+
+<main>
+  <section id="quiz">
+    <div class="progress"><div class="progress-bar" id="bar"></div></div>
+    <div class="counter" id="counter"></div>
+    <div class="scene" id="scene">
+      <div class="flip" id="flip">
+        <div class="face front" id="front"><div class="tag" id="ftag"></div><div class="q" id="fq"></div><span class="hint">clicca per girare</span></div>
+        <div class="face back" id="back"><div class="tag" id="btag"></div><div class="a" id="ba"></div><span class="hint">clicca per tornare</span></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn" id="prev">← Indietro</button>
+      <button class="btn" id="shuffle" title="Mischia">⇄</button>
+      <button class="btn" id="next">Avanti →</button>
+    </div>
+    <div class="finish" id="finish">
+      <h2>Sessione completata!</h2>
+      <p id="finishMsg"></p>
+      <div class="nav" style="justify-content:center;margin-top:1rem">
+        <button class="btn" id="restart">Ricomincia</button>
+        <button class="btn" id="reshuffle">⇄ Mischia e ricomincia</button>
+      </div>
+    </div>
+  </section>
+  <section id="browse"></section>
+</main>
+
+<footer>Unità 1 · Magnetismo essenziale e induzione elettromagnetica</footer>
+
+<script>
+const cards = [
+{ cat: "teoria", q: "Che cosa sono i materiali ferromagnetici? Fai degli esempi.", a: "Sono materiali che si possono <b>magnetizzare</b>: un chiodo a contatto con la magnetite (magnete naturale) diventa un magnete artificiale. Sono ferromagnetici <b>ferro, nickel, cobalto</b> e le loro leghe; rame e alluminio no. Un materiale ferromagnetico genera un campo magnetico solo se è stato magnetizzato." },
+{ cat: "teoria", q: "Poli magnetici e magnete Terra: quali sono le regole fondamentali?", a: "Ogni magnete ha un <b>polo nord</b> e un <b>polo sud</b>. Poli dello stesso tipo si respingono, poli diversi si attraggono.<br>Il <b>polo sud</b> del magnete Terra si trova vicino al Polo Nord geografico: per questo il polo nord dell'ago della bussola punta verso Nord." },
+{ cat: "teoria", q: "Come si definiscono direzione e verso di \\(\\vec B\\)? Quali proprietà hanno le linee di campo?", a: "Si usa un ago magnetico libero di ruotare. <b>Direzione</b>: la retta dei poli dell'ago all'equilibrio. <b>Verso</b>: dal polo sud al polo nord dell'ago.<br>Le linee di campo sono tangenti a \\(\\vec B\\) in ogni punto, escono dal polo nord ed entrano nel polo sud, sono più fitte dove \\(B\\) è più intenso. Tra due poli piani affacciati sono parallele: campo uniforme." },
+{ cat: "esercizio", q: "Un ago di bussola è sull'asse di un magnete a barra, a destra del polo nord. Come si orienta?", a: "1. Le linee di campo escono dal polo nord del magnete.<br>2. Sull'asse, a destra di N, \\(\\vec B\\) punta verso destra (lontano dal magnete).<br>3. L'ago si allinea a \\(\\vec B\\): il suo polo nord punta verso destra.<br><b>Verifica:</b> il polo sud dell'ago è rivolto verso il polo nord del magnete: poli diversi si attraggono ✓" },
+{ cat: "esercizio", q: "Il vettore \\(\\vec a\\) (modulo 3,0) è lungo l'asse \\(x\\); \\(\\vec b\\) (modulo 4,0) è nel piano \\(xy\\) a 30° da \\(\\vec a\\). Calcola \\(|\\vec a \\times \\vec b|\\), direzione e verso. E \\(\\vec b \\times \\vec a\\)?", a: "\\(|\\vec a \\times \\vec b| = a\\,b \\sin 30° = 3{,}0 \\cdot 4{,}0 \\cdot 0{,}50 = 6{,}0\\).<br>Direzione perpendicolare al piano \\(xy\\); con la mano destra il verso è \\(+z\\) (uscente dal foglio).<br>\\(\\vec b \\times \\vec a = -(\\vec a \\times \\vec b)\\): modulo 6,0, verso \\(-z\\).<br><b>Verifica:</b> con vettori paralleli \\(\\sin 0° = 0\\) e il prodotto sarebbe nullo ✓" },
+{ cat: "ragionamento", q: "Che cosa succede se spezzo un magnete in quattro parti? Che cosa ci dice sul confronto con il campo elettrico?", a: "Ottengo quattro magneti, <b>ognuno con un polo nord e un polo sud</b>: non esistono poli magnetici isolati. Le cariche elettriche positive e negative si possono separare, i poli magnetici no: un magnete è un <b>dipolo magnetico</b>. Per questo le linee di \\(\\vec B\\) non finiscono sui poli: dentro il magnete proseguono da S a N e sono chiuse." },
+{ cat: "teoria", q: "Che cosa mostrano gli esperimenti di Oersted, Faraday e Ampère?", a: "<b>Oersted (1820)</b>: un filo percorso da corrente fa ruotare un ago magnetico → una corrente genera un campo magnetico.<br><b>Faraday (1821)</b>: un filo con corrente tra due poli subisce una forza perpendicolare al filo e al campo (mano destra: pollice = \\(i\\), dita = \\(\\vec B\\), forza dal palmo).<br><b>Ampère</b>: fili con correnti concordi si attraggono, discordi si respingono." },
+{ cat: "teoria", q: "Enuncia la legge di Ampère per due fili paralleli.", a: "La forza su un tratto \\(l\\) di ciascuno dei due fili, a distanza \\(d\\), è\\[F = k_m \\frac{i_1\\, i_2\\, l}{d}, \\qquad k_m = \\frac{\\mu_0}{2\\pi} = 2\\cdot 10^{-7}\\ \\mathrm{N/A^2}\\]con \\(\\mu_0 = 4\\pi\\cdot 10^{-7}\\ \\mathrm{N/A^2}\\), permeabilità magnetica del vuoto. \\(F\\) è proporzionale a \\(i_1\\), \\(i_2\\) e \\(l\\), inversamente proporzionale a \\(d\\) (in metri!)." },
+{ cat: "esercizio", q: "Due fili paralleli distano 5,0 cm; le correnti sono 10 A e 15 A, in versi opposti. Calcola la forza su un tratto di 1,0 m.", a: "Dati: \\(i_1 = 10\\) A, \\(i_2 = 15\\) A, \\(d = 0{,}050\\) m, \\(l = 1{,}0\\) m.<br>\\(F = k_m \\dfrac{i_1 i_2 l}{d} = \\dfrac{(2\\cdot10^{-7})(10)(15)(1{,}0)}{0{,}050}\\ \\mathrm{N} = 6{,}0\\cdot10^{-4}\\ \\mathrm{N}\\)<br>Versi opposti: forza <b>repulsiva</b>.<br><b>Verifica:</b> \\(\\mathrm{\\tfrac{N}{A^2}\\cdot A\\cdot A\\cdot \\tfrac{m}{m} = N}\\) ✓" },
+{ cat: "esercizio", q: "Due fili paralleli con la stessa corrente di 10 A si attraggono con 0,01 N per metro. A che distanza sono?", a: "Dalla legge di Ampère: \\(d = \\dfrac{k_m\\, i^2\\, l}{F} = \\dfrac{(2\\cdot10^{-7})(10)^2(1)}{0{,}01}\\ \\mathrm{m} = 2\\cdot10^{-3}\\ \\mathrm{m} = 2\\ \\mathrm{mm}\\).<br><b>Verifica:</b> \\(F = (2\\cdot10^{-7})(100)(1)/0{,}002 = 0{,}01\\) N ✓" },
+{ cat: "ragionamento", q: "Due fili con correnti nello stesso verso si attraggono. Perché è facile sbagliare, pensando al caso elettrico?", a: "Per le cariche elettriche vale il contrario: cariche <b>dello stesso segno</b> si respingono. Per le correnti, invece, <b>correnti concordi si attraggono</b> e discordi si respingono. Se inverto una sola corrente la forza cambia verso; se le inverto entrambe torna attrattiva." },
+{ cat: "ragionamento", q: "Come è definito oggi l'ampere? Perché il valore di \\(\\mu_0\\) non è più esatto?", a: "Fino al 2019: 1 A era la corrente che, in due fili a 1 m, dava una forza di \\(2\\cdot10^{-7}\\) N per metro (così \\(\\mu_0\\) era esatto). Oggi si fissa la carica elementare \\(e = 1{,}602176634\\cdot10^{-19}\\) C: 1 A è il transito di \\(1/e\\) cariche elementari al secondo. Ora \\(\\mu_0\\) si ricava da una misura (es. forza tra due fili), quindi ha un'incertezza sperimentale." },
+{ cat: "teoria", q: "Come si definisce il modulo del campo magnetico? Qual è la sua unità?", a: "Si usa un filo di prova lungo \\(l\\), con corrente \\(i\\), perpendicolare a \\(\\vec B\\): la forza è proporzionale a \\(i\\) e a \\(l\\), e\\[B = \\frac{F}{i\\, l}\\]Unità: <b>tesla</b>, \\(1\\ \\mathrm{T} = 1\\ \\mathrm{N/(A\\cdot m)}\\). Ordini di grandezza: calamita \\(\\sim 10^{-2}\\) T; elettromagnete \\(\\sim 2\\) T; Terra \\(\\sim 50\\ \\mu\\mathrm{T}\\)." },
+{ cat: "teoria", q: "Campo magnetico di un filo rettilineo: forma delle linee, verso, modulo.", a: "Le linee sono <b>circonferenze concentriche</b> con il filo. Verso: pollice della mano destra nel verso di \\(i\\), le dita si chiudono nel verso di \\(\\vec B\\).<br>Legge di Biot-Savart (per \\(d\\) molto minore della lunghezza del filo):\\[B = \\frac{\\mu_0}{2\\pi}\\frac{i}{d} = k_m \\frac{i}{d}\\]" },
+{ cat: "teoria", q: "Quanto vale il campo al centro di una spira e dentro un solenoide?", a: "<b>Spira</b> di raggio \\(R\\), al centro: \\(B = \\dfrac{\\mu_0\\, i}{2R}\\), diretto lungo l'asse (pollice = \\(\\vec B\\), dita nel verso della corrente).<br><b>Solenoide</b> di \\(N\\) spire lungo \\(l\\): \\(B = \\mu_0\\, n\\, i\\), con \\(n = N/l\\) spire per metro. Dentro \\(B\\) è quasi uniforme e parallelo all'asse; fuori è quasi nullo (nullo per un solenoide infinito)." },
+{ cat: "esercizio", q: "Un lungo filo è percorso da 10 A. Quanto vale \\(B\\) a 2,0 cm dal filo?", a: "\\(B = k_m \\dfrac{i}{d} = \\dfrac{(2\\cdot10^{-7}\\ \\mathrm{N/A^2})(10\\ \\mathrm{A})}{0{,}020\\ \\mathrm{m}} = 1{,}0\\cdot10^{-4}\\ \\mathrm{T} = 100\\ \\mu\\mathrm{T}\\)<br>Confronto: è il doppio del campo terrestre (\\(\\sim 50\\ \\mu\\)T).<br><b>Verifica:</b> \\(\\mathrm{\\tfrac{N}{A^2}\\cdot\\tfrac{A}{m} = \\tfrac{N}{A\\,m} = T}\\) ✓" },
+{ cat: "esercizio", q: "In un solenoide nel vuoto con \\(i = 0{,}860\\) A si misura \\(B = 1{,}49\\) mT. Quante spire per metro ha?", a: "\\(n = \\dfrac{B}{\\mu_0\\, i} = \\dfrac{1{,}49\\cdot10^{-3}\\ \\mathrm{T}}{(4\\pi\\cdot10^{-7}\\ \\mathrm{N/A^2})(0{,}860\\ \\mathrm{A})} = 1{,}38\\cdot10^{3}\\ \\mathrm{m^{-1}}\\)<br>cioè circa 14 spire per centimetro.<br><b>Verifica:</b> \\(\\mu_0 n i = (4\\pi\\cdot10^{-7})(1380)(0{,}860) \\approx 1{,}49\\cdot10^{-3}\\) T ✓" },
+{ cat: "ragionamento", q: "Una spira è percorsa da corrente in senso antiorario, vista dall'alto. La faccia superiore è un polo nord o un polo sud?", a: "Con la mano destra: dita nel verso della corrente (antiorario), il pollice indica \\(\\vec B\\) <b>verso l'alto</b>, cioè verso chi guarda. Le linee escono dalla faccia superiore, come da un polo nord: la faccia superiore è un <b>polo nord</b>. Da lontano, infatti, le linee di una spira somigliano a quelle di un magnete a barra." },
+{ cat: "teoria", q: "Quanto vale la forza magnetica su un tratto di filo percorso da corrente?", a: "\\[\\vec F = i\\, \\vec l \\times \\vec B, \\qquad F = i\\, l\\, B \\sin\\alpha\\]\\(\\vec l\\) è lungo il filo, nel verso di \\(i\\); \\(\\alpha\\) è l'angolo tra filo e \\(\\vec B\\). Conta solo la componente di \\(\\vec B\\) perpendicolare al filo.<br>Filo parallelo a \\(\\vec B\\): \\(F = 0\\). Filo perpendicolare: \\(F = B\\,i\\,l\\), massima." },
+{ cat: "teoria", q: "Che cos'è la forza di Lorentz?", a: "È la forza magnetica su una carica \\(q\\) con velocità \\(\\vec v\\) in un campo \\(\\vec B\\) (una corrente è fatta di cariche in moto):\\[\\vec F = q\\, \\vec v \\times \\vec B, \\qquad F = q\\, v\\, B \\sin\\alpha\\]\\(\\vec F\\) è perpendicolare sia a \\(\\vec v\\) sia a \\(\\vec B\\). Se \\(q < 0\\) il verso è opposto a quello di \\(\\vec v \\times \\vec B\\)." },
+{ cat: "esercizio", q: "Un filo di rame di 12 g, lungo 40 cm, appeso a una bilancia, porta 18 A in un campo di 29 mT perpendicolare. La forza magnetica è verso il basso. Che massa segna la bilancia?", a: "1. Forza magnetica: \\(F = i\\,l\\,B = (18)(0{,}40)(0{,}029)\\ \\mathrm{N} = 0{,}21\\ \\mathrm{N}\\)<br>2. Peso: \\(P = m g = (0{,}012)(9{,}8)\\ \\mathrm{N} = 0{,}12\\ \\mathrm{N}\\)<br>3. Forza totale verso il basso: \\(0{,}33\\ \\mathrm{N}\\)<br>4. La bilancia segna \\(0{,}33/9{,}8\\ \\mathrm{kg} = 33\\ \\mathrm{g}\\).<br><b>Verifica:</b> \\(33\\ \\mathrm{g} > 12\\ \\mathrm{g}\\), coerente con una forza verso il basso ✓" },
+{ cat: "esercizio", q: "Un elettrone si muove lungo \\(+x\\) a \\(3{,}0\\cdot10^6\\) m/s in un campo \\(B = 0{,}20\\) T diretto lungo \\(+z\\). Calcola modulo, direzione e verso della forza di Lorentz.", a: "Modulo: \\(F = e\\,v\\,B = (1{,}602\\cdot10^{-19})(3{,}0\\cdot10^{6})(0{,}20)\\ \\mathrm{N} = 9{,}6\\cdot10^{-14}\\ \\mathrm{N}\\)<br>Verso: \\(\\hat x \\times \\hat z = -\\hat y\\); la carica è <b>negativa</b>, quindi \\(\\vec F\\) è diretta lungo \\(+y\\).<br><b>Verifica:</b> \\(\\vec F \\perp \\vec v\\) e \\(\\vec F \\perp \\vec B\\) ✓" },
+{ cat: "ragionamento", q: "Perché la forza di Lorentz non compie lavoro? Che cosa ne segue per la velocità della carica?", a: "\\(\\vec F\\) è sempre <b>perpendicolare alla velocità</b>, quindi al suo spostamento: il lavoro è nullo. Per il teorema dell'energia cinetica \\(\\Delta K = 0\\): il <b>modulo</b> della velocità resta costante, cambia solo la direzione. Per questo un campo magnetico non può accelerare un protone aumentandone la velocità. Una carica ferma, poi, non subisce alcuna forza magnetica." },
+{ cat: "ragionamento", q: "Un filo forma 30° con le linee di un campo uniforme. La forza è la metà o quasi uguale a quella con 90°? Perché si usa il seno e non il coseno?", a: "\\(F = i\\,l\\,B \\sin 30° = \\tfrac12\\, i\\,l\\,B\\): è <b>la metà</b> di quella a 90°. Si usa il seno perché conta solo la componente di \\(\\vec B\\) perpendicolare al filo. Controllo con i casi limite: filo parallelo a \\(\\vec B\\) (\\(\\alpha = 0°\\)) → forza nulla, e \\(\\sin 0° = 0\\); con il coseno si otterrebbe il massimo, assurdo." },
+{ cat: "teoria", q: "Una carica entra con velocità perpendicolare a un campo uniforme. Che moto fa? Quanto valgono raggio e periodo?", a: "La forza di Lorentz è perpendicolare a \\(\\vec v\\) e costante in modulo: fa da forza centripeta, \\(q v B = m v^2/r\\). Moto <b>circolare uniforme</b>:\\[r = \\frac{m v}{q B}, \\qquad T = \\frac{2\\pi r}{v} = \\frac{2\\pi m}{q B}\\]Il raggio cresce con la quantità di moto \\(m v\\); il periodo <b>non dipende</b> dalla velocità." },
+{ cat: "teoria", q: "Che cosa succede se la velocità è obliqua rispetto a \\(\\vec B\\)?", a: "Si scompone \\(\\vec v\\): \\(v_{\\parallel} = v \\cos\\alpha\\) lungo \\(\\vec B\\) resta costante (moto uniforme); \\(v_{\\perp} = v\\sin\\alpha\\) dà un moto circolare di raggio \\(r = \\dfrac{m v_{\\perp}}{qB}\\).<br>La traiettoria è un'<b>elica</b>, con passo \\(p = v_{\\parallel}\\, T\\) e lo stesso periodo \\(T = 2\\pi m/(qB)\\) del moto circolare." },
+{ cat: "teoria", q: "Come si misura la carica specifica \\(e/m\\) dell'elettrone? (cenno)", a: "Elettroni accelerati da una ddp \\(\\Delta V\\): \\(e\\,\\Delta V = \\tfrac12 m v^2\\), cioè \\(v = \\sqrt{2e\\Delta V/m}\\). In un campo \\(B\\) noto descrivono una circonferenza di raggio \\(r = m v/(eB)\\). Eliminando \\(v\\):\\[\\frac{e}{m} = \\frac{2\\,\\Delta V}{B^2 r^2}\\]Misurando \\(r\\) si ricava \\(e/m = 1{,}76\\cdot10^{11}\\) C/kg (Thomson, 1897)." },
+{ cat: "esercizio", q: "Un protone, accelerato da fermo con \\(\\Delta V = 1{,}0\\) kV, entra perpendicolarmente in un campo di 0,10 T. Calcola \\(v\\), \\(r\\) e \\(T\\).", a: "1. \\(e\\Delta V = \\tfrac12 m v^2 \\Rightarrow v = \\sqrt{2e\\Delta V/m} = 4{,}4\\cdot10^{5}\\ \\mathrm{m/s}\\)<br>2. \\(r = \\dfrac{m v}{e B} = \\dfrac{(1{,}673\\cdot10^{-27})(4{,}38\\cdot10^{5})}{(1{,}602\\cdot10^{-19})(0{,}10)}\\ \\mathrm{m} = 4{,}6\\ \\mathrm{cm}\\)<br>3. \\(T = \\dfrac{2\\pi m}{e B} = 6{,}6\\cdot10^{-7}\\ \\mathrm{s}\\)<br><b>Verifica:</b> \\(2\\pi r/v = 6{,}6\\cdot10^{-7}\\) s ✓" },
+{ cat: "esercizio", q: "Una particella α (\\(m = 6{,}645\\cdot10^{-27}\\) kg, due protoni e due neutroni) entra a \\(1{,}0\\cdot10^6\\) m/s perpendicolarmente in un campo di 0,12 T. Calcola il raggio.", a: "1. Carica: \\(q = 2e = 3{,}204\\cdot10^{-19}\\ \\mathrm{C}\\) (attenzione: due protoni!).<br>2. \\(r = \\dfrac{m v}{q B} = \\dfrac{(6{,}645\\cdot10^{-27})(1{,}0\\cdot10^{6})}{(3{,}204\\cdot10^{-19})(0{,}12)}\\ \\mathrm{m} = 0{,}17\\ \\mathrm{m} = 17\\ \\mathrm{cm}\\)<br><b>Verifica:</b> \\(\\mathrm{\\tfrac{kg\\cdot m/s}{C\\cdot T} = m}\\), perché \\(\\mathrm{T = \\tfrac{kg}{C\\,s}}\\) ✓" },
+{ cat: "ragionamento", q: "Se raddoppio la velocità di una carica che percorre una circonferenza in un campo uniforme, che cosa succede a \\(r\\) e a \\(T\\)?", a: "Il raggio \\(r = mv/(qB)\\) <b>raddoppia</b>. Il periodo \\(T = 2\\pi m/(qB)\\) <b>non cambia</b>: la carica percorre una circonferenza lunga il doppio, ma con velocità doppia. Per lo stesso motivo nel moto elicoidale il periodo è lo stesso del moto circolare: dipende solo da \\(m\\), \\(q\\) e \\(B\\)." },
+{ cat: "teoria", q: "Come si definisce il flusso del campo magnetico attraverso una superficie piana?", a: "\\[\\Phi(\\vec B) = \\vec B \\cdot \\vec S = B\\, S \\cos\\alpha\\]\\(\\vec S\\) è il vettore superficie, perpendicolare alla superficie; \\(\\alpha\\) è l'angolo tra \\(\\vec B\\) e \\(\\vec S\\) (non tra \\(\\vec B\\) e il piano!).<br>Unità: <b>weber</b>, \\(1\\ \\mathrm{Wb} = 1\\ \\mathrm{T\\cdot m^2}\\). Per una bobina di \\(N\\) spire: \\(\\Phi = N B S\\cos\\alpha\\)." },
+{ cat: "teoria", q: "Che cosa dice il teorema di Gauss per il magnetismo?", a: "Il flusso di \\(\\vec B\\) attraverso <b>qualunque superficie chiusa</b> è nullo:\\[\\Phi_{\\text{chiusa}}(\\vec B) = 0\\]Le linee del campo magnetico sono chiuse: ogni linea che entra in una superficie chiusa ne esce. È un altro modo di dire che non esistono poli magnetici isolati." },
+{ cat: "teoria", q: "Enuncia il teorema di Ampère sulla circuitazione. Che cosa implica?", a: "La circuitazione di \\(\\vec B\\) lungo una linea chiusa orientata \\(L\\) (somma dei \\(\\vec B\\cdot\\Delta\\vec l\\)) vale\\[\\Gamma_L(\\vec B) = \\mu_0 \\sum i\\]dove si sommano solo le correnti <b>concatenate</b>: + se il pollice della mano destra le indica quando le dita seguono \\(L\\), − altrimenti. Per un filo si ritrova \\(B = \\mu_0 i/(2\\pi r)\\). Poiché \\(\\Gamma \\ne 0\\), il campo magnetico <b>non è conservativo</b>." },
+{ cat: "esercizio", q: "Una bobina di 50 spire, ciascuna di area 20 cm², è in un campo di 0,30 T che forma 60° con il vettore superficie. Calcola il flusso.", a: "\\(\\Phi = N B S \\cos\\alpha = 50 \\cdot (0{,}30\\ \\mathrm{T})(20\\cdot10^{-4}\\ \\mathrm{m^2}) \\cos 60°\\)<br>\\(\\Phi = 50 \\cdot 6{,}0\\cdot10^{-4} \\cdot 0{,}50\\ \\mathrm{Wb} = 1{,}5\\cdot10^{-2}\\ \\mathrm{Wb}\\)<br><b>Verifica:</b> area convertita (\\(1\\ \\mathrm{cm^2} = 10^{-4}\\ \\mathrm{m^2}\\)) e \\(N\\) incluso; \\(\\mathrm{T\\cdot m^2 = Wb}\\) ✓" },
+{ cat: "esercizio", q: "Una linea chiusa concatena le correnti 3,0 A e 2,0 A (positive) e 4,0 A (negativa). Quanto vale la circuitazione?", a: "1. Somma algebrica: \\(3{,}0 + 2{,}0 - 4{,}0 = 1{,}0\\ \\mathrm{A}\\)<br>2. \\(\\Gamma = \\mu_0 \\sum i = (4\\pi\\cdot10^{-7}\\ \\mathrm{N/A^2})(1{,}0\\ \\mathrm{A}) = 1{,}3\\cdot10^{-6}\\ \\mathrm{T\\cdot m}\\)<br>Una corrente esterna alla linea non contribuirebbe.<br><b>Verifica:</b> \\(\\mathrm{\\tfrac{N}{A^2}\\cdot A = \\tfrac{N}{A} = T\\cdot m}\\) ✓" },
+{ cat: "ragionamento", q: "Perché il flusso di \\(\\vec B\\) attraverso una superficie chiusa è sempre nullo, mentre quello di \\(\\vec E\\) può non esserlo?", a: "Le linee di \\(\\vec E\\) nascono e muoiono sulle cariche: se la superficie racchiude una carica netta, il flusso è diverso da zero (Gauss: \\(Q/\\varepsilon_0\\)). Le linee di \\(\\vec B\\) invece sono <b>chiuse</b>, perché non esistono poli magnetici isolati: tutto ciò che entra esce, anche se la superficie contiene un magnete." },
+{ cat: "teoria", q: "Quali esperimenti mostrano che si può ottenere una corrente da un campo magnetico?", a: "<b>Magnete e bobina</b>: una bobina collegata a un amperometro, senza generatore. Con il magnete fermo non passa corrente; quando si avvicina o si allontana passa corrente, con verso che dipende dal polo e dal moto.<br><b>Induttore e indotto</b>: un circuito con generatore e solenoide e una bobina vicina. Si ha corrente indotta solo quando si chiude o apre l'interruttore o si varia la resistenza, cioè quando la corrente dell'induttore cambia." },
+{ cat: "teoria", q: "Qual è la causa comune della corrente indotta? In quali modi si può ottenere?", a: "In tutti i casi <b>varia il flusso</b> di \\(\\vec B\\) attraverso il circuito, \\(\\Phi = B S\\cos\\alpha\\). Si può variare:<br>1. il modulo di \\(\\vec B\\) (avvicinando un magnete o variando la corrente che lo genera);<br>2. l'area \\(S\\) del circuito (deformandolo);<br>3. l'orientazione \\(\\alpha\\) del circuito (ruotandolo).<br>Applicazioni: pick-up della chitarra, contagiri, salvavita." },
+{ cat: "esercizio", q: "Una spira è in un campo uniforme e costante che la attraversa tutta. C'è corrente indotta se: a) trasla; b) ruota attorno a un diametro; c) viene schiacciata?", a: "a) Trasla: \\(B\\), \\(S\\) e \\(\\alpha\\) non cambiano → \\(\\Phi\\) costante → <b>nessuna corrente</b>.<br>b) Ruota: cambia \\(\\alpha\\) → \\(\\Phi\\) varia → corrente indotta.<br>c) Schiacciata: cambia \\(S\\) → \\(\\Phi\\) varia → corrente indotta.<br><b>Verifica:</b> in ogni caso basta chiedersi se cambia uno dei tre fattori di \\(B S \\cos\\alpha\\) ✓" },
+{ cat: "esercizio", q: "Una bobina quadrata di 18 spire, di lato 12,0 cm, è in un campo di \\(6{,}30\\cdot10^{-4}\\) T. L'angolo tra \\(\\vec B\\) e il vettore superficie passa da 16,0° a 61,0°. Calcola la variazione percentuale del flusso.", a: "1. \\(\\Phi_i = N B S \\cos 16{,}0° = 18(6{,}30\\cdot10^{-4})(0{,}120)^2 \\cos 16{,}0°\\ \\mathrm{Wb} = 1{,}57\\cdot10^{-4}\\ \\mathrm{Wb}\\)<br>2. \\(\\Phi_f = N B S \\cos 61{,}0° = 7{,}92\\cdot10^{-5}\\ \\mathrm{Wb}\\)<br>3. \\(\\dfrac{\\Phi_f - \\Phi_i}{\\Phi_i} = -49{,}6\\%\\)<br><b>Verifica:</b> \\(\\cos 61{,}0°/\\cos 16{,}0° = 0{,}504\\), cioè il flusso si riduce circa della metà ✓" },
+{ cat: "ragionamento", q: "Lorenzo: «Una spira vicina a un filo con corrente può essere percorsa da corrente indotta». Ida: «Sì, se la corrente è elevata». Chi ha ragione?", a: "Serve una corrente <b>variabile</b>, non elevata. Una corrente grande ma costante dà un flusso grande ma costante attraverso la spira: nessuna corrente indotta. Conta la <b>variazione</b> del flusso, non il suo valore. Non serve nemmeno un contatto elettrico: i due circuiti sono isolati." },
+{ cat: "ragionamento", q: "Perché l'ago dell'amperometro devia in versi opposti avvicinando e allontanando il magnete dalla bobina?", a: "Avvicinando il magnete il flusso attraverso la bobina <b>aumenta</b>; allontanandolo <b>diminuisce</b>. Il verso della corrente indotta dipende da come varia il flusso: variazioni opposte danno correnti in versi opposti. Lo stesso accade invertendo il polo rivolto alla bobina (il flusso cambia segno). Se invece muovo la bobina e tengo fermo il magnete, conta solo il moto relativo." },
+{ cat: "teoria", q: "Enuncia la legge di Faraday-Neumann (fem media).", a: "La variazione del flusso genera una <b>forza elettromotrice indotta</b>:\\[f_{em} = -\\frac{\\Delta\\Phi(\\vec B)}{\\Delta t}\\]Più rapida è la variazione, più intensa è la fem. La corrente indotta in un circuito di resistenza \\(R\\) è \\(i = f_{em}/R\\). Unità: \\(\\mathrm{Wb/s = V}\\). Il segno meno è la legge di Lenz." },
+{ cat: "teoria", q: "Come si esprime la fem istantanea? Fai l'esempio \\(\\Phi(t) = \\Phi_0\\cos(\\omega t)\\).", a: "Per \\(\\Delta t \\to 0\\) il rapporto diventa una derivata: la fem istantanea è l'opposto della derivata del flusso,\\[f_{em}(t) = -\\frac{d\\Phi}{dt}\\]Se \\(\\Phi(t) = \\Phi_0\\cos(\\omega t)\\), allora \\(f_{em}(t) = \\Phi_0\\,\\omega\\sin(\\omega t)\\)." },
+{ cat: "teoria", q: "Come funzionano salvavita, contagiri e pick-up della chitarra elettrica?", a: "<b>Salvavita</b> (interruttore differenziale): se una corrente si disperde, varia il flusso nel solenoide di test; la corrente indotta apre il circuito in pochi millisecondi.<br><b>Contagiri</b>: un magnete sull'albero motore induce un impulso in una spira a ogni giro.<br><b>Chitarra elettrica</b>: le corde magnetizzate vibrano vicino a una bobina; la fem indotta ha le frequenze delle corde." },
+{ cat: "esercizio", q: "Una bobina di 20 spire, ciascuna di 4,0 cm², è collegata a una lampadina. Il campo medio passa da 0 a 9,4 mT ogni 0,50 s. Valore assoluto della fem media?", a: "1. Area totale: \\(S' = N S = 20 \\cdot 4{,}0\\cdot10^{-4}\\ \\mathrm{m^2} = 8{,}0\\cdot10^{-3}\\ \\mathrm{m^2}\\)<br>2. \\(\\Delta\\Phi = S'(B_f - B_i) = (8{,}0\\cdot10^{-3})(9{,}4\\cdot10^{-3})\\ \\mathrm{Wb} = 7{,}5\\cdot10^{-5}\\ \\mathrm{Wb}\\)<br>3. \\(|f_{em}| = \\Delta\\Phi/\\Delta t = 7{,}5\\cdot10^{-5}/0{,}50\\ \\mathrm{V} = 1{,}5\\cdot10^{-4}\\ \\mathrm{V}\\)<br><b>Verifica:</b> si divide per \\(\\Delta t\\), non si moltiplica: \\(\\mathrm{Wb/s = V}\\) ✓" },
+{ cat: "esercizio", q: "Un campo uniforme di 4,5 mT è perpendicolare a un circuito piano di 16 cm². Il campo scende a 3,0 mT in 1,2 s. Calcola la fem media.", a: "1. \\(\\Delta\\Phi = S\\,\\Delta B = (16\\cdot10^{-4}\\ \\mathrm{m^2})(3{,}0 - 4{,}5)\\cdot10^{-3}\\ \\mathrm{T} = -2{,}4\\cdot10^{-6}\\ \\mathrm{Wb}\\)<br>2. \\(f_{em} = -\\dfrac{\\Delta\\Phi}{\\Delta t} = \\dfrac{2{,}4\\cdot10^{-6}}{1{,}2}\\ \\mathrm{V} = 2{,}0\\cdot10^{-6}\\ \\mathrm{V} = 2{,}0\\ \\mu\\mathrm{V}\\)<br><b>Verifica:</b> il flusso diminuisce, quindi la fem è positiva per il segno meno ✓" },
+{ cat: "ragionamento", q: "Se raddoppio il numero di spire di una bobina, oppure avvicino il magnete più velocemente, che cosa succede alla fem indotta?", a: "Con il doppio delle spire il flusso concatenato è doppio (\\(N\\) volte quello di una spira), quindi anche \\(\\Delta\\Phi\\) e la fem <b>raddoppiano</b>. Avvicinando il magnete più velocemente la stessa \\(\\Delta\\Phi\\) avviene in un tempo \\(\\Delta t\\) minore: la fem <b>aumenta</b>, perché dipende dalla rapidità della variazione." },
+{ cat: "teoria", q: "Perché una sbarra metallica che si muove in un campo magnetico diventa un generatore? Quanto vale la fem?", a: "La forza di Lorentz spinge gli elettroni verso un estremo: le cariche si separano e tra gli estremi nasce una ddp. Su un filo a U gli elettroni circolano: corrente indotta.<br>In \\(\\Delta t\\) la sbarra percorre \\(v\\Delta t\\): l'area cambia di \\(l\\,v\\,\\Delta t\\) e \\(|\\Delta\\Phi| = B\\,l\\,v\\,\\Delta t\\). Con Faraday-Neumann:\\[|f_{em}| = B\\, l\\, v\\]valida per \\(\\vec B\\), \\(l\\) e \\(\\vec v\\) perpendicolari tra loro." },
+{ cat: "teoria", q: "Barretta in moto: quale forza agisce su di essa? Come si conserva l'energia?", a: "Sulla sbarra percorsa da corrente agisce \\(\\vec F = i\\,\\vec l\\times\\vec B\\), di modulo \\(F = B\\,i\\,l\\), che si <b>oppone al moto</b> (forza frenante). Per mantenere \\(v\\) costante serve una forza esterna, di potenza\\[P = F v = B\\,i\\,l\\,v = f_{em}\\, i = R\\, i^2\\]La potenza meccanica fornita è uguale a quella dissipata per effetto Joule: l'energia si conserva." },
+{ cat: "esercizio", q: "Una barretta lunga 0,50 m scorre su un filo a U, con \\(B = 0{,}40\\) T, \\(v = 2{,}0\\) m/s costante, \\(R = 2{,}0\\ \\Omega\\). Calcola fem, corrente, forza frenante e potenza.", a: "1. \\(f_{em} = B l v = (0{,}40)(0{,}50)(2{,}0)\\ \\mathrm{V} = 0{,}40\\ \\mathrm{V}\\)<br>2. \\(i = f_{em}/R = 0{,}40/2{,}0\\ \\mathrm{A} = 0{,}20\\ \\mathrm{A}\\)<br>3. \\(F = B i l = (0{,}40)(0{,}20)(0{,}50)\\ \\mathrm{N} = 0{,}040\\ \\mathrm{N}\\)<br>4. \\(P = F v = 0{,}080\\ \\mathrm{W}\\)<br><b>Verifica:</b> \\(R i^2 = (2{,}0)(0{,}20)^2 = 0{,}080\\) W ✓" },
+{ cat: "esercizio", q: "Una barra lunga 24 cm si muove a velocità costante su un filo a U in un campo di 25 mT. La resistenza del circuito è 1,5 Ω e la corrente indotta è 2,4 mA. Determina \\(v\\).", a: "1. \\(f_{em} = B l v\\) e anche \\(f_{em} = R i\\).<br>2. Quindi \\(B l v = R i\\).<br>3. \\(v = \\dfrac{R i}{B l} = \\dfrac{(1{,}5)(2{,}4\\cdot10^{-3})}{(25\\cdot10^{-3})(0{,}24)}\\ \\mathrm{m/s} = 0{,}60\\ \\mathrm{m/s}\\)<br><b>Verifica:</b> \\(B l v / R = (0{,}025)(0{,}24)(0{,}60)/1{,}5 = 2{,}4\\) mA ✓" },
+{ cat: "ragionamento", q: "Se smetto di tirare la barretta, continua a muoversi a velocità costante? Chi fornisce l'energia dissipata nella resistenza?", a: "No: finché c'è corrente agisce la <b>forza frenante</b> \\(B i l\\), opposta a \\(\\vec v\\); la barretta rallenta fino a fermarsi, e con lei si annullano fem e corrente. L'energia dissipata nella resistenza viene dal <b>lavoro della forza esterna</b> (o, senza forza esterna, dall'energia cinetica della barretta)." },
+{ cat: "ragionamento", q: "Una barretta si muove parallela alle linee di campo. C'è fem indotta?", a: "No. La forza di Lorentz \\(q\\vec v\\times\\vec B\\) sugli elettroni è nulla perché \\(\\vec v \\parallel \\vec B\\), e il flusso attraverso il circuito non cambia. La formula \\(f_{em} = B l v\\) vale solo con \\(\\vec B\\), \\(l\\) e \\(\\vec v\\) perpendicolari tra loro: conviene sempre scrivere le ipotesi accanto alla formula." },
+{ cat: "teoria", q: "Enuncia la legge di Lenz e la procedura per trovare il verso della corrente indotta.", a: "Il verso della corrente indotta è tale da generare un campo che <b>si oppone alla variazione del flusso</b> che l'ha prodotta (non al campo!). È il significato del segno meno in Faraday-Neumann.<br>1. Il flusso aumenta o diminuisce?<br>2. Aumenta: \\(\\vec B_{ind}\\) opposto a \\(\\vec B\\). Diminuisce: \\(\\vec B_{ind}\\) concorde.<br>3. Pollice della mano destra su \\(\\vec B_{ind}\\): le dita danno il verso di \\(i\\)." },
+{ cat: "teoria", q: "Che cosa sono le correnti di Foucault e quali effetti hanno?", a: "Sono correnti indotte che circolano in un <b>blocco conduttore</b> immerso in un campo magnetico variabile (o in moto in un campo).<br>Per Lenz producono <b>forze frenanti</b> (freni magnetici, magnete che cade lento in un tubo di rame) e <b>riscaldano</b> il conduttore per effetto Joule (piani a induzione). Nei trasformatori si riducono con nuclei fatti di lamine isolate." },
+{ cat: "esercizio", q: "Un magnete con il polo nord in basso si avvicina dall'alto a una spira orizzontale. In che verso circola la corrente, vista dall'alto?", a: "1. \\(\\vec B\\) del magnete attraversa la spira verso il basso e il flusso <b>aumenta</b>.<br>2. Il campo indotto è opposto: verso l'alto.<br>3. Pollice verso l'alto: corrente <b>antioraria</b> vista dall'alto.<br><b>Verifica:</b> la faccia superiore diventa un polo nord e respinge il nord del magnete, opponendosi all'avvicinamento ✓" },
+{ cat: "esercizio", q: "Una spira circolare giace nel piano del foglio, in un campo uniforme entrante nel foglio. Il modulo del campo diminuisce. In che verso circola la corrente indotta?", a: "1. Il flusso (entrante) <b>diminuisce</b>.<br>2. Per opporsi alla diminuzione, il campo indotto è concorde: entrante.<br>3. Pollice entrante nel foglio: corrente in senso <b>orario</b>.<br><b>Verifica:</b> il campo indotto entrante \"rinforza\" il flusso che sta calando, come richiede Lenz ✓" },
+{ cat: "ragionamento", q: "Perché la legge di Lenz è una conseguenza della conservazione dell'energia?", a: "Ragioniamo per assurdo: se la corrente indotta <b>favorisse</b> la variazione di flusso, il flusso crescerebbe ancora, quindi anche la corrente, e così via. Si otterrebbero energia e calore dal nulla: impossibile. Per questo, per indurre una corrente, bisogna sempre compiere lavoro contro una forza (come la forza frenante sulla barretta)." },
+{ cat: "ragionamento", q: "Il rame non è ferromagnetico: allora perché un magnete lasciato cadere in un tubo di rame scende lentamente?", a: "Il magnete in moto fa <b>variare il flusso</b> attraverso le sezioni del tubo: si inducono correnti di Foucault che, per Lenz, generano un campo che si oppone al moto. Ne nasce una forza frenante verso l'alto che cresce con la velocità: a regime bilancia il peso e il magnete scende a velocità costante. L'energia potenziale persa diventa energia interna del tubo (effetto Joule)." },
+{ cat: "teoria", q: "Che cosa sono l'autoinduzione e l'induttanza? Quanto vale la fem autoindotta?", a: "Un circuito con corrente \\(i\\) genera un campo che attraversa il circuito stesso: il flusso \"proprio\" è proporzionale a \\(i\\), \\(\\Phi = L\\, i\\). \\(L\\) è l'<b>induttanza</b>; unità: henry, \\(1\\ \\mathrm{H} = 1\\ \\mathrm{Wb/A}\\).<br>Se \\(i\\) varia si induce una fem che si oppone alla variazione di corrente:\\[f_{em} = -L\\frac{\\Delta i}{\\Delta t}, \\qquad f_{em} = -L\\frac{di}{dt}\\]" },
+{ cat: "teoria", q: "Quanto vale l'induttanza di un solenoide? Da che cosa dipende?", a: "Flusso in ogni spira: \\(\\mu_0 \\dfrac{N}{l} i\\, S\\); le spire sono \\(N\\), quindi \\(\\Phi = \\dfrac{\\mu_0 N^2 S}{l}\\, i\\) e\\[L = \\frac{\\mu_0 N^2 S}{l}\\]\\(L\\) dipende solo dalla geometria (e dal materiale interno), non dalla corrente. Raddoppiando \\(N\\) a parità di \\(l\\), \\(L\\) quadruplica." },
+{ cat: "teoria", q: "Che cos'è la mutua induzione?", a: "Due circuiti vicini: la corrente \\(i_1\\) del primo genera un flusso nel secondo, \\(\\Phi_2 = M\\, i_1\\). \\(M\\) è il <b>coefficiente di mutua induzione</b> (in henry) ed è lo stesso nei due sensi: \\(M_{12} = M_{21}\\).<br>Se \\(i_1\\) varia, nel secondo circuito si induce una fem: \\(f_{em,2} = -M\\dfrac{\\Delta i_1}{\\Delta t}\\). È il principio del salvavita e del trasformatore." },
+{ cat: "esercizio", q: "Un solenoide di 450 spire è lungo 28 cm e ha raggio 1,5 cm. La corrente aumenta di 120 A ogni secondo. Valore assoluto della fem autoindotta?", a: "1. \\(L = \\dfrac{\\mu_0 N^2 \\pi r^2}{l} = \\dfrac{(4\\pi\\cdot10^{-7})(450)^2\\pi(0{,}015)^2}{0{,}28}\\ \\mathrm{H} = 6{,}4\\cdot10^{-4}\\ \\mathrm{H}\\)<br>2. \\(|f_{em}| = L\\dfrac{\\Delta i}{\\Delta t} = (6{,}4\\cdot10^{-4}\\ \\mathrm{H})(120\\ \\mathrm{A/s}) = 0{,}077\\ \\mathrm{V}\\)<br><b>Verifica:</b> \\(\\mathrm{H\\cdot A/s = Wb/s = V}\\); nella formula c'è \\(N^2\\), non \\(N\\) ✓" },
+{ cat: "esercizio", q: "Due circuiti hanno \\(M = 35\\) mH. La corrente nel primo passa da 0,85 A a 1,8 A in 4,5 s. Calcola la variazione di flusso nel secondo e la fem media indotta.", a: "1. \\(\\Delta i_1 = 1{,}8 - 0{,}85 = 0{,}95\\ \\mathrm{A}\\)<br>2. \\(\\Delta\\Phi_2 = M\\,\\Delta i_1 = (35\\cdot10^{-3})(0{,}95)\\ \\mathrm{Wb} = 3{,}3\\cdot10^{-2}\\ \\mathrm{Wb}\\)<br>3. \\(f_{em} = -\\dfrac{\\Delta\\Phi_2}{\\Delta t} = -\\dfrac{3{,}3\\cdot10^{-2}}{4{,}5}\\ \\mathrm{V} = -7{,}4\\ \\mathrm{mV}\\)<br><b>Verifica:</b> il segno meno indica che la fem si oppone all'aumento di flusso (Lenz) ✓" },
+{ cat: "ragionamento", q: "Perché quando si stacca la spina di un motore può scoccare una scintilla?", a: "Staccando la spina la corrente dovrebbe annullarsi in un tempo brevissimo: \\(\\Delta i/\\Delta t\\) è enorme. Nell'avvolgimento del motore (grande induttanza) si induce una <b>fem autoindotta</b> molto grande che si oppone alla diminuzione della corrente e può far scoccare una scintilla tra i contatti. È l'\"inerzia\" della corrente: in un circuito con induttanza non cambia mai di colpo." },
+{ cat: "teoria", q: "Circuito RL: come varia la corrente alla chiusura e all'apertura? Che cos'è la costante di tempo? (cenno)", a: "Generatore \\(f_0\\), resistore \\(R\\) e induttore \\(L\\) in serie. Alla chiusura la corrente <b>cresce gradualmente</b> fino a \\(f_0/R\\); escludendo il generatore <b>decresce gradualmente</b>.<br>Costante di tempo: \\(\\tau = \\dfrac{L}{R}\\). In fase di apertura, dopo un tempo \\(\\tau\\) la corrente si riduce a \\(1/e\\) del valore iniziale." },
+{ cat: "teoria", q: "Quanta energia è immagazzinata in un induttore? Qual è la densità di energia del campo magnetico? (cenno)", a: "Per portare la corrente a \\(I\\) il generatore compie lavoro contro la fem autoindotta; l'energia resta immagazzinata nel campo dell'induttore:\\[W = \\tfrac12 L I^2, \\qquad w = \\frac{B^2}{2\\mu_0}\\]\\(w\\) è l'energia per unità di volume. Analogia con il condensatore: \\(\\tfrac12 C\\,\\Delta V^2\\) e \\(\\tfrac12\\varepsilon_0 E^2\\)." },
+{ cat: "esercizio", q: "Una bobina con \\(L = 0{,}20\\) H e \\(R = 5{,}0\\ \\Omega\\) è collegata a un generatore da 10 V. Calcola \\(\\tau\\), la corrente a regime e l'energia immagazzinata.", a: "1. \\(\\tau = L/R = 0{,}20\\ \\mathrm{H}/5{,}0\\ \\Omega = 0{,}040\\ \\mathrm{s}\\)<br>2. \\(I = f_0/R = 10\\ \\mathrm{V}/5{,}0\\ \\Omega = 2{,}0\\ \\mathrm{A}\\)<br>3. \\(W = \\tfrac12 L I^2 = \\tfrac12(0{,}20)(2{,}0)^2\\ \\mathrm{J} = 0{,}40\\ \\mathrm{J}\\)<br><b>Verifica:</b> \\(\\mathrm{H/\\Omega = s}\\) e \\(\\mathrm{H\\cdot A^2 = J}\\) ✓" },
+{ cat: "esercizio", q: "Una barretta (\\(l = 40\\) cm, \\(m = 30\\) g, \\(R = 2{,}0\\ \\Omega\\)) cade lungo una guida verticale in un campo \\(B = 2{,}5\\) T perpendicolare. Trova la forza magnetica in funzione di \\(v\\) e la velocità massima.", a: "1. \\(f_{em} = B l v\\) → \\(i = \\dfrac{B l v}{R}\\)<br>2. \\(F = B i l = \\dfrac{B^2 l^2 v}{R}\\), verso l'alto (Lenz).<br>3. \\(m a = m g - B^2 l^2 v/R\\): \\(a\\) cala al crescere di \\(v\\).<br>4. A regime \\(a = 0\\): \\(v_{lim} = \\dfrac{m g R}{B^2 l^2}\\)<br>\\(v_{lim} = \\dfrac{(0{,}030)(9{,}8)(2{,}0)}{(2{,}5)^2(0{,}40)^2}\\ \\mathrm{m/s} = 0{,}59\\ \\mathrm{m/s}\\)<br><b>Verifica:</b> \\(B^2 l^2 v_{lim}/R = 0{,}294\\ \\mathrm{N} = m g\\) ✓" },
+{ cat: "ragionamento", q: "Perché la barretta che cade nel campo magnetico non accelera all'infinito? A regime la forza magnetica è nulla?", a: "La forza magnetica \\(B^2 l^2 v/R\\) cresce con la velocità: man mano che la barretta accelera, la forza verso l'alto aumenta e l'accelerazione diminuisce. A regime la forza magnetica <b>non è nulla</b>: è uguale al peso, ed è la <b>somma delle forze</b> a essere nulla. La barretta allora scende a velocità costante \\(v_{lim}\\)." },
+{ cat: "ragionamento", q: "Nella barretta che cade a velocità limite, dove va l'energia potenziale persa? Che cosa cambia se raddoppio la resistenza?", a: "A regime l'energia cinetica è costante: tutta l'energia potenziale persa si trasforma in energia interna del circuito per effetto Joule (\\(m g v_{lim} = R i^2\\)). Raddoppiando \\(R\\) la corrente, a parità di velocità, si dimezza e la frenata è minore: \\(v_{lim} = m g R/(B^2 l^2)\\) <b>raddoppia</b>." }
+];
+
+const LABEL = { teoria: "Teoria", esercizio: "Esercizio", ragionamento: "Ragionamento" };
+let filter = "tutte", mode = "quiz", deck = [], idx = 0;
+
+function typeset(el) { if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise(el ? [el] : undefined).catch(() => {}); }
+function buildDeck() { deck = cards.filter(c => filter === "tutte" || c.cat === filter); idx = 0; }
+function shuffleDeck() { for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; } idx = 0; }
+
+function showCard() {
+  const flip = document.getElementById("flip");
+  const finish = document.getElementById("finish");
+  document.getElementById("countPill").textContent = deck.length + " carte";
+  if (!deck.length) { document.getElementById("counter").textContent = "Nessuna carta"; return; }
+  if (idx >= deck.length) {
+    document.getElementById("scene").style.display = "none";
+    document.querySelector("#quiz > .nav").style.display = "none";
+    finish.style.display = "block";
+    document.getElementById("finishMsg").textContent = "Hai ripassato " + deck.length + " carte.";
+    document.getElementById("bar").style.width = "100%";
+    document.getElementById("counter").textContent = deck.length + " / " + deck.length;
+    return;
+  }
+  document.getElementById("scene").style.display = "";
+  document.querySelector("#quiz > .nav").style.display = "";
+  finish.style.display = "none";
+  flip.classList.remove("flipped");
+  const c = deck[idx];
+  const front = document.getElementById("front");
+  front.className = "face front " + c.cat;
+  document.getElementById("ftag").textContent = LABEL[c.cat];
+  document.getElementById("btag").textContent = "Risposta";
+  document.getElementById("fq").innerHTML = c.q;
+  document.getElementById("ba").innerHTML = c.a;
+  document.getElementById("counter").textContent = (idx + 1) + " / " + deck.length;
+  document.getElementById("bar").style.width = (idx / deck.length * 100) + "%";
+  document.getElementById("prev").disabled = idx === 0;
+  typeset(document.getElementById("scene"));
+}
+
+function renderBrowse() {
+  const el = document.getElementById("browse");
+  el.innerHTML = deck.map(c => `<div class="bcard ${c.cat}"><div class="tag">${LABEL[c.cat]}</div><div class="q">${c.q}</div><div class="a">${c.a}</div></div>`).join("");
+  document.getElementById("countPill").textContent = deck.length + " carte";
+  typeset(el);
+}
+
+function refresh() {
+  document.getElementById("quiz").style.display = mode === "quiz" ? "flex" : "none";
+  document.getElementById("browse").style.display = mode === "browse" ? "grid" : "none";
+  mode === "quiz" ? showCard() : renderBrowse();
+}
+
+document.getElementById("filters").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  filter = b.dataset.cat;
+  document.querySelectorAll("#filters .btn").forEach(x => x.classList.toggle("active", x === b));
+  buildDeck(); refresh();
+});
+document.getElementById("modes").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  mode = b.dataset.mode;
+  document.querySelectorAll("#modes .btn").forEach(x => x.classList.toggle("active", x === b));
+  refresh();
+});
+document.getElementById("scene").addEventListener("click", () => document.getElementById("flip").classList.toggle("flipped"));
+document.getElementById("next").addEventListener("click", () => { idx++; showCard(); });
+document.getElementById("prev").addEventListener("click", () => { if (idx > 0) { idx--; showCard(); } });
+document.getElementById("shuffle").addEventListener("click", () => { shuffleDeck(); showCard(); });
+document.getElementById("restart").addEventListener("click", () => { idx = 0; showCard(); });
+document.getElementById("reshuffle").addEventListener("click", () => { shuffleDeck(); showCard(); });
+document.addEventListener("keydown", e => {
+  if (mode !== "quiz") return;
+  if (e.key === "ArrowRight") { idx++; showCard(); }
+  if (e.key === "ArrowLeft" && idx > 0) { idx--; showCard(); }
+  if (e.key === " ") { e.preventDefault(); document.getElementById("flip").classList.toggle("flipped"); }
+});
+
+document.getElementById("totCount").textContent = cards.length;
+buildDeck(); refresh();
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards di Ripasso — Fisica</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #e8e4f0;
+  --paper: #0f0e1a;
+  --paper-dark: #1c1a2e;
+  --gold: #7c5cfc;
+  --gold-light: #a78bfa;
+  --back: #1e1b4b;
+  --red: #8b2020;
+  --green: #1a4a2e;
+  --shadow: rgba(26,16,8,0.15);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--paper); color: var(--ink); font-family: 'Source Serif 4', Georgia, serif; min-height: 100vh; }
+header { text-align: center; padding: 3rem 1rem 2rem; border-bottom: 2px solid var(--gold); }
+.badge { display: inline-block; font-size: .7rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold);
+  border: 1.5px solid var(--gold); padding: .28rem .8rem; border-radius: 20px; margin-bottom: 1rem; }
+header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 4vw, 2.6rem); }
+header p { margin-top: .6rem; font-style: italic; opacity: .75; }
+.container { max-width: 1000px; margin: 0 auto; padding: 2.5rem 1.2rem 4rem; }
+.section-label { font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; opacity: .7;
+  margin: 1.5rem 0 1rem; display: flex; align-items: center; gap: .6rem; }
+.section-label::after { content: ''; flex: 1; height: 1px; background: var(--gold); opacity: .35; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; }
+.unit-card { display: flex; flex-direction: column; background: #fff; color: #1a1008; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 12px var(--shadow); text-decoration: none; transition: transform .18s, box-shadow .18s; }
+a.unit-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
+.card-stripe { height: 6px; background: linear-gradient(90deg, var(--gold), var(--gold-light)); }
+.card-body { padding: 1.2rem 1.3rem .6rem; flex: 1; }
+.card-unit-num { font-size: .72rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); }
+.card-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; margin: .3rem 0 .5rem; }
+.card-desc { font-size: .88rem; line-height: 1.5; color: #5a4a35; }
+.card-footer { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1.3rem 1.1rem; gap: .5rem; flex-wrap: wrap; }
+.card-stats { display: flex; gap: .3rem; flex-wrap: wrap; }
+.stat-chip { font-size: .7rem; padding: .18rem .5rem; border-radius: 10px; font-weight: 600; }
+.chip-t { background: rgba(200,150,62,.15); color: #8a5a10; }
+.chip-e { background: rgba(139,32,32,.1); color: var(--red); }
+.chip-r { background: rgba(26,74,46,.1); color: var(--green); }
+.card-cta { font-size: .85rem; font-weight: 700; color: var(--gold); }
+.card-cta::after { content: ' →'; }
+.unit-card.locked { opacity: .55; filter: grayscale(.6); cursor: default; }
+.unit-card.locked .card-stripe { background: #bbb; }
+.lock { font-size: .8rem; font-style: italic; color: #777; }
+footer { text-align: center; padding: 1.5rem; font-size: .78rem; opacity: .6; font-style: italic; }
+</style>
+</head>
+<body>
+<header>
+  <div class="badge">Ripassa</div>
+  <h1>Flashcards di Ripasso — Fisica</h1>
+  <p>Teoria, esercizi e ragionamento</p>
+</header>
+<div class="container">
+  <div class="section-label">Disponibili</div>
+  <div class="grid" id="disponibili">
+    <!-- UNITA DISPONIBILI -->
+    <a href="unita1.html" class="unit-card">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-unit-num">Unità 1</div>
+        <div class="card-title">Magnetismo essenziale e induzione elettromagnetica</div>
+        <div class="card-desc">Campo magnetico di magneti e correnti, forze su fili e cariche, flusso e circuitazione, Faraday-Neumann, Lenz, autoinduzione e circuito RL.</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-stats">
+          <span class="stat-chip chip-t">30 Teoria</span>
+          <span class="stat-chip chip-e">24 Esercizi</span>
+          <span class="stat-chip chip-r">18 Ragionamento</span>
+        </div>
+        <span class="card-cta">Studia</span>
+      </div>
+    </a>
+  </div>
+
+</div>
+<footer>Flashcards di Ripasso — Fisica</footer>
+</body>
+</html>
